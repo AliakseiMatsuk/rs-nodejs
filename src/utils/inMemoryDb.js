@@ -11,9 +11,7 @@ const db = {
   }
 })();
 
-const getAllEntities = tableName => {
-  return db[tableName].filter(entity => entity);
-};
+const getAllEntities = tableName => db[tableName].filter(entity => entity);
 
 const getEntity = (tableName, id) => {
   const entities = db[tableName]

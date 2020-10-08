@@ -15,12 +15,6 @@ const get = async id => {
   return user;
 };
 
-const remove = async id => {
-  if (!(await DB.removeEntity(TABLE_NAME, id))) {
-    throw new NOT_FOUND_ERROR(`Couldn't find a user with id: ${id}`);
-  }
-};
-
 const save = async user => await DB.saveEntity(TABLE_NAME, user);
 
 const update = async (id, user) => {
@@ -33,4 +27,12 @@ const update = async (id, user) => {
   return updatedUser;
 };
 
-module.exports = { getAll, get, remove, save, update };
+const remove = async id => {
+  const deletedUser = await DB.removeEntity(TABLE_NAME, id);
+
+  if (!deletedUser) {
+    throw new NOT_FOUND_ERROR(`Couldn't find a user with id: ${id}`);
+  }
+};
+
+module.exports = { getAll, get, save, update, remove };
