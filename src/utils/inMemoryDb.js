@@ -1,7 +1,9 @@
 const User = require('../resources/users/user.model');
+const Board = require('../resources/boards/board.model');
 
 const db = {
-  Users: []
+  Users: [],
+  Boards: []
 };
 
 // init DB with mock data
@@ -9,6 +11,7 @@ const db = {
   for (let i = 0; i < 3; i++) {
     db.Users.push(new User());
   }
+  db.Boards.push(new Board());
 })();
 
 const getAllEntities = tableName => db[tableName].filter(entity => entity);
