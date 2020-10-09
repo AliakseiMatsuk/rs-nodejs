@@ -32,29 +32,13 @@ const db = {
     db.Tasks.push(new Task({ boardId: board.id }));
   }
 })();
-const getAllEntities = tableName => db[tableName].filter(entity => entity);
+const getAllEntities = tableName => db[tableName];
 
-const getEntity = (tableName, id) => {
-  const entities = db[tableName]
-    .filter(entity => entity)
-    .filter(entity => entity.id === id);
-
-  if (entities.length > 1) {
-    console.error(
-      `The DB data is damaged. Table: ${tableName}. Entity ID: ${id}`
-    );
-    throw Error('The DB data is wrong!');
-  }
-
-  return entities[0];
-};
+const getEntity = (tableName, id) => db[tableName].find(e => e.id === id);
 
 const removeEntity = (tableName, id) => {
   const entity = getEntity(tableName, id);
   if (entity) {
-    if (db[`fix${tableName}Structure`]) {
-      db[`fix${tableName}Structure`](entity);
-    }
     const index = db[tableName].indexOf(entity);
     db[tableName] = [
       ...db[tableName].slice(0, index),
@@ -62,6 +46,9 @@ const removeEntity = (tableName, id) => {
         ? db[tableName].slice(index + 1)
         : [])
     ];
+    if (db[`fix${tableName}Structure`]) {
+      db[`fix${tableName}Structure`](entity);
+    }
   }
 
   return entity;
