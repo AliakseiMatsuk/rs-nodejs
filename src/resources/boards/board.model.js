@@ -1,15 +1,11 @@
 const uuid = require('uuid');
+const Column = require('./column.model');
 
 class Board {
   constructor({
     id = uuid(),
     title = 'BOARD TITLE',
-    columns = [
-      {
-        title: 'TASK TITLE',
-        order: 0
-      }
-    ]
+    columns = [new Column()]
   } = {}) {
     this.id = id;
     this.title = title;

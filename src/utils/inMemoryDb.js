@@ -1,19 +1,37 @@
 const User = require('../resources/users/user.model');
 const Board = require('../resources/boards/board.model');
+const Task = require('../resources/tasks/task.model');
 
 const db = {
   Users: [],
-  Boards: []
+  Boards: [],
+  Tasks: [],
+  fixUsersStructure(user) {
+    if (user) {
+      db.Tasks.forEach(task => {
+        if (task.userId === user.id) {
+          task.userId = null;
+        }
+      });
+    }
+  },
+  fixBoardsStructure(board) {
+    if (board) {
+      db.Tasks = db.Tasks.filter(({ boardId }) => boardId !== board.id);
+    }
+  }
 };
 
 // init DB with mock data
 (() => {
+  const board = new Board();
+  db.Boards.push(board);
+
   for (let i = 0; i < 3; i++) {
     db.Users.push(new User());
+    db.Tasks.push(new Task({ boardId: board.id }));
   }
-  db.Boards.push(new Board());
 })();
-
 const getAllEntities = tableName => db[tableName].filter(entity => entity);
 
 const getEntity = (tableName, id) => {
@@ -34,6 +52,9 @@ const getEntity = (tableName, id) => {
 const removeEntity = (tableName, id) => {
   const entity = getEntity(tableName, id);
   if (entity) {
+    if (db[`fix${tableName}Structure`]) {
+      db[`fix${tableName}Structure`](entity);
+    }
     const index = db[tableName].indexOf(entity);
     db[tableName] = [
       ...db[tableName].slice(0, index),
