@@ -5,24 +5,9 @@ const Task = require('../resources/tasks/task.model');
 const db = {
   Users: [],
   Boards: [],
-  Tasks: [],
-  fixUsersStructure(user) {
-    if (user) {
-      db.Tasks.forEach(task => {
-        if (task.userId === user.id) {
-          task.userId = null;
-        }
-      });
-    }
-  },
-  fixBoardsStructure(board) {
-    if (board) {
-      db.Tasks = db.Tasks.filter(({ boardId }) => boardId !== board.id);
-    }
-  }
+  Tasks: []
 };
 
-// init DB with mock data
 (() => {
   const board = new Board();
   db.Boards.push(board);
@@ -32,6 +17,7 @@ const db = {
     db.Tasks.push(new Task({ boardId: board.id }));
   }
 })();
+
 const getAllEntities = tableName => db[tableName];
 
 const getEntity = (tableName, id) => db[tableName].find(e => e.id === id);
@@ -39,16 +25,7 @@ const getEntity = (tableName, id) => db[tableName].find(e => e.id === id);
 const removeEntity = (tableName, id) => {
   const entity = getEntity(tableName, id);
   if (entity) {
-    const index = db[tableName].indexOf(entity);
-    db[tableName] = [
-      ...db[tableName].slice(0, index),
-      ...(db[tableName].length > index + 1
-        ? db[tableName].slice(index + 1)
-        : [])
-    ];
-    if (db[`fix${tableName}Structure`]) {
-      db[`fix${tableName}Structure`](entity);
-    }
+    db[tableName].splice(db[tableName].indexOf(entity), 1);
   }
 
   return entity;
@@ -61,11 +38,9 @@ const saveEntity = (tableName, entity) => {
 
 const updateEntity = async (tableName, id, entity) => {
   const oldEntity = getEntity(tableName, id);
+
   if (oldEntity) {
-    db[tableName][db[tableName].indexOf(oldEntity)] = {
-      id: oldEntity.id,
-      ...entity
-    };
+    db[tableName][db[tableName].indexOf(oldEntity)] = { id, ...entity };
   }
   return getEntity(tableName, id);
 };

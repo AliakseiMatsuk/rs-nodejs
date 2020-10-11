@@ -28,10 +28,11 @@ const update = async (id, board) => {
 };
 
 const remove = async id => {
-  const deletedBoard = await DB.removeEntity(TABLE_NAME, id);
-  if (!deletedBoard) {
+  const removedBoard = await DB.removeEntity(TABLE_NAME, id);
+  if (!removedBoard) {
     throw new NOT_FOUND_ERROR(`Couldn't find a board with id: ${id}`);
   }
+  return removedBoard;
 };
 
 module.exports = { getAll, get, save, update, remove };

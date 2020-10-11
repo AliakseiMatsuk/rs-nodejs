@@ -3,7 +3,9 @@ const NOT_FOUND_ERROR = require('../../errors/appError');
 
 const TABLE_NAME = 'Tasks';
 
-const getAll = async boardId => {
+const getAll = async () => DB.getAllEntities(TABLE_NAME);
+
+const getAllByBoardId = async boardId => {
   return DB.getAllEntities(TABLE_NAME).filter(task => task.boardId === boardId);
 };
 
@@ -34,4 +36,4 @@ const remove = async id => {
   }
 };
 
-module.exports = { getAll, get, save, update, remove };
+module.exports = { getAll, getAllByBoardId, get, save, update, remove };

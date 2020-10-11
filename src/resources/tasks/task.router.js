@@ -3,7 +3,7 @@ const Task = require('./task.model');
 const taskService = require('./task.service');
 
 router.route('/').get(async (req, res) => {
-  const tasks = await taskService.getAll(req.params.boardId);
+  const tasks = await taskService.getAllByBoardId(req.params.boardId);
   res.json(tasks);
 });
 
