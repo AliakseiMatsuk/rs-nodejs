@@ -25,7 +25,13 @@ const getEntity = (tableName, id) => db[tableName].find(e => e.id === id);
 const removeEntity = (tableName, id) => {
   const entity = getEntity(tableName, id);
   if (entity) {
-    db[tableName].splice(db[tableName].indexOf(entity), 1);
+    const index = db[tableName].indexOf(entity);
+    db[tableName] = [
+      ...db[tableName].slice(0, index),
+      ...(db[tableName].length > index + 1
+        ? db[tableName].slice(index + 1)
+        : [])
+    ];
   }
 
   return entity;
