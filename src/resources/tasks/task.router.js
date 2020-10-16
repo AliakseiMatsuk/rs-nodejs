@@ -1,15 +1,16 @@
+const { OK } = require('http-status-codes');
 const router = require('express').Router({ mergeParams: true });
 const Task = require('./task.model');
 const taskService = require('./task.service');
 
 router.route('/').get(async (req, res) => {
   const tasks = await taskService.getAllByBoardId(req.params.boardId);
-  res.json(tasks);
+  res.status(OK).json(tasks);
 });
 
 router.route('/:id').get(async (req, res) => {
   const task = await taskService.get(req.params.boardId, req.params.id);
-  res.status(200).json(task);
+  res.status(OK).json(task);
 });
 
 router.route('/').post(async (req, res) => {
@@ -19,7 +20,7 @@ router.route('/').post(async (req, res) => {
       boardId: req.params.boardId
     })
   );
-  res.status(200).json(task);
+  res.status(OK).json(task);
 });
 
 router.route('/:id').put(async (req, res) => {
@@ -28,12 +29,12 @@ router.route('/:id').put(async (req, res) => {
     id: req.params.id,
     boardId: req.params.boardId
   });
-  res.status(200).json(task);
+  res.status(OK).json(task);
 });
 
 router.route('/:id').delete(async (req, res) => {
   await taskService.remove(req.params.id);
-  res.sendStatus(200);
+  res.sendStatus(OK);
 });
 
 module.exports = router;

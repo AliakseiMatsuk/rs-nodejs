@@ -3,7 +3,7 @@ const Column = require('./column.model');
 
 class Board {
   constructor({
-    id = uuid(),
+    id = uuid.v4(),
     title = 'BOARD TITLE',
     columns = [new Column()]
   } = {}) {
