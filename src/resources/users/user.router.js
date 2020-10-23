@@ -1,23 +1,22 @@
 const { OK } = require('http-status-codes');
 const router = require('express').Router();
-const User = require('./user.model');
 const usersService = require('./user.service');
 const { id, user } = require('../../utils/validation/sсhemas');
 const validator = require('../../utils/validation/validator');
 
 router.get('/', async (req, res) => {
   const users = await usersService.getAll();
-  res.status(OK).json(users.map(User.toResponse));
+  await res.status(OK).json(users.map(u => u.toResponse()));
 });
 
 router.get('/:id', validator(id, 'params'), async (req, res) => {
   const userEntity = await usersService.get(req.params.id);
-  res.status(OK).json(User.toResponse(userEntity));
+  res.status(OK).json(userEntity.toResponse());
 });
 
 router.route('/').post(async (req, res) => {
-  const userEntity = await usersService.save(User.fromRequest(req.body));
-  res.status(OK).json(User.toResponse(userEntity));
+  const userEntity = await usersService.save(req.body);
+  res.status(OK).json(userEntity.toResponse());
 });
 
 router.put(
@@ -26,7 +25,7 @@ router.put(
   validator(user, 'body'),
   async (req, res) => {
     const userEntity = await usersService.update(req.params.id, req.body);
-    res.status(OK).json(User.toResponse(userEntity));
+    res.status(OK).json(userEntity.toResponse());
   }
 );
 

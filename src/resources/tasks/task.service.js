@@ -1,6 +1,4 @@
-const tasksRepo = require('./task.memory.repository');
-
-const getAll = () => tasksRepo.getAll();
+const tasksRepo = require('./task.db.repository');
 
 const getAllByBoardId = boardId => tasksRepo.getAllByBoardId(boardId);
 
@@ -8,8 +6,17 @@ const get = (boardId, id) => tasksRepo.get(boardId, id);
 
 const save = task => tasksRepo.save(task);
 
-const update = task => tasksRepo.update(task);
+const update = (boardId, id, task) => tasksRepo.update(boardId, id, task);
 
-const remove = id => tasksRepo.remove(id);
+const updateMany = (filter, updates) => tasksRepo.updateMany(filter, updates);
 
-module.exports = { getAll, getAllByBoardId, get, save, update, remove };
+const removeByBoard = boardId => tasksRepo.removeByBoardId(boardId);
+
+module.exports = {
+  getAllByBoardId,
+  get,
+  save,
+  update,
+  updateMany,
+  removeByBoard
+};

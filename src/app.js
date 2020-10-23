@@ -55,14 +55,4 @@ app.use((req, res, next) => next(createError(NOT_FOUND)));
 
 app.use(errorHandler);
 
-// Exceptions catcher
-// uncaughtException catching by Winston
-process.on('unhandledRejection', reason => {
-  process.emit('uncaughtException', reason);
-});
-
-// throw Error('Oops!');
-
-// Promise.reject(Error('Oops!'));
-
 module.exports = app;

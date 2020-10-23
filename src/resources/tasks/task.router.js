@@ -1,6 +1,5 @@
 const { OK } = require('http-status-codes');
 const router = require('express').Router({ mergeParams: true });
-const Task = require('./task.model');
 const taskService = require('./task.service');
 const { taskId } = require('../../utils/validation/sсhemas');
 const validator = require('../../utils/validation/validator');
@@ -12,30 +11,28 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', validator(taskId, 'params'), async (req, res) => {
   const task = await taskService.get(req.params.boardId, req.params.id);
-  res.status(OK).json(task);
+  res.status(OK).json(task.toResponse());
 });
 
 router.route('/').post(async (req, res) => {
-  const task = await taskService.save(
-    Task.fromRequest({
-      ...req.body,
-      boardId: req.params.boardId
-    })
-  );
-  res.status(OK).json(task);
+  const task = await taskService.save({
+    ...req.body,
+    boardId: req.params.boardId
+  });
+  res.status(OK).json(task.toResponse());
 });
 
 router.put('/:id', validator(taskId, 'params'), async (req, res) => {
-  const task = await taskService.update({
-    ...req.body,
-    id: req.params.id,
-    boardId: req.params.boardId
-  });
-  res.status(OK).json(task);
+  const task = await taskService.update(
+    req.params.boardId,
+    req.params.id,
+    req.body
+  );
+  res.status(OK).json(task.toResponse());
 });
 
 router.delete('/:id', validator(taskId, 'params'), async (req, res) => {
-  await taskService.remove(req.params.id);
+  await taskService.remove(req.params.boardId, req.params.id);
   res.sendStatus(OK);
 });
 
