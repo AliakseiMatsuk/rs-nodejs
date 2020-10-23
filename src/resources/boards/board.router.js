@@ -2,13 +2,15 @@ const { OK } = require('http-status-codes');
 const router = require('express').Router();
 const Board = require('./board.model');
 const boardService = require('./board.service');
+const { id } = require('../../utils/validation/sсhemas');
+const validator = require('../../utils/validation/validator');
 
-router.route('/').get(async (req, res) => {
+router.get('/', async (req, res) => {
   const boards = await boardService.getAll();
   res.status(OK).json(boards);
 });
 
-router.route('/:id').get(async (req, res) => {
+router.get('/:id', validator(id, 'params'), async (req, res) => {
   const board = await boardService.get(req.params.id);
   res.status(OK).json(board);
 });
@@ -18,12 +20,12 @@ router.route('/').post(async (req, res) => {
   res.status(OK).json(board);
 });
 
-router.route('/:id').put(async (req, res) => {
+router.put('/:id', validator(id, 'params'), async (req, res) => {
   const board = await boardService.update(req.params.id, req.body);
   res.status(OK).json(board);
 });
 
-router.route('/:id').delete(async (req, res) => {
+router.delete('/:id', validator(id, 'params'), async (req, res) => {
   await boardService.remove(req.params.id);
   res.sendStatus(OK);
 });

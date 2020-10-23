@@ -2,9 +2,13 @@ const express = require('express');
 const swaggerUI = require('swagger-ui-express');
 const path = require('path');
 const YAML = require('yamljs');
-const createError = require('http-errors');
 const { NOT_FOUND } = require('http-status-codes');
+const createError = require('http-errors');
 const morgan = require('morgan');
+
+const cors = require('cors');
+const helmet = require('helmet');
+
 require('express-async-errors');
 
 const winston = require('./common/logging');
@@ -18,6 +22,8 @@ const app = express();
 app.disable('x-powered-by');
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
 
+app.use(helmet());
+app.use(cors());
 app.use(express.json());
 
 if (process.env.NODE_ENV === 'development') {
