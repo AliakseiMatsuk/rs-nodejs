@@ -1,4 +1,4 @@
-const { OK } = require('http-status-codes');
+const { OK, NO_CONTENT } = require('http-status-codes');
 const router = require('express').Router();
 const usersService = require('./user.service');
 const { id, user } = require('../../utils/validation/sсhemas');
@@ -31,7 +31,7 @@ router.put(
 
 router.delete('/:id', validator(id, 'params'), async (req, res) => {
   await usersService.remove(req.params.id);
-  res.sendStatus(OK);
+  res.sendStatus(NO_CONTENT);
 });
 
 module.exports = router;

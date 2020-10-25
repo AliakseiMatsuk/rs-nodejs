@@ -1,4 +1,4 @@
-const { OK } = require('http-status-codes');
+const { OK, NO_CONTENT } = require('http-status-codes');
 const router = require('express').Router({ mergeParams: true });
 const taskService = require('./task.service');
 const { taskId } = require('../../utils/validation/sсhemas');
@@ -6,7 +6,7 @@ const validator = require('../../utils/validation/validator');
 
 router.get('/', async (req, res) => {
   const tasks = await taskService.getAllByBoardId(req.params.boardId);
-  res.status(OK).json(tasks);
+  await res.status(OK).json(tasks.map(t => t.toResponse()));
 });
 
 router.get('/:id', validator(taskId, 'params'), async (req, res) => {
@@ -33,7 +33,7 @@ router.put('/:id', validator(taskId, 'params'), async (req, res) => {
 
 router.delete('/:id', validator(taskId, 'params'), async (req, res) => {
   await taskService.remove(req.params.boardId, req.params.id);
-  res.sendStatus(OK);
+  res.sendStatus(NO_CONTENT);
 });
 
 module.exports = router;

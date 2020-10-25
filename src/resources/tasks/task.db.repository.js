@@ -27,7 +27,7 @@ const remove = async (boardId, id) => {
   }
 };
 
-const removeByBoardId = async boardId => await Task.deleteMany({ boardId });
+const removeByBoard = async boardId => await Task.deleteMany({ boardId });
 
 module.exports = {
   getAllByBoardId,
@@ -36,5 +36,5 @@ module.exports = {
   update,
   updateMany,
   remove,
-  removeByBoardId
+  removeByBoard
 };
