@@ -266,7 +266,7 @@
         "space-before-function-paren": [
             2,
             {
-                "anonymous": "always",
+                "anonymous": "ignore",
                 "named": "never"
             }
         ],

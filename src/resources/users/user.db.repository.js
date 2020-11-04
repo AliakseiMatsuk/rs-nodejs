@@ -13,6 +13,10 @@ const get = async id => {
   return user;
 };
 
+const getByLogin = async login => {
+  return User.findOne({ login });
+};
+
 const save = async user => User.create(user);
 
 const update = async (id, user) =>
@@ -25,4 +29,4 @@ const remove = async id => {
   }
 };
 
-module.exports = { getAll, get, save, update, remove };
+module.exports = { getAll, get, getByLogin, save, update, remove };

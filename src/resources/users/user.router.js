@@ -1,4 +1,4 @@
-const { OK, NO_CONTENT } = require('http-status-codes');
+const { OK, NO_CONTENT, BAD_REQUEST } = require('http-status-codes');
 const router = require('express').Router();
 const usersService = require('./user.service');
 const { id, user } = require('../../utils/validation/sсhemas');
@@ -14,7 +14,14 @@ router.get('/:id', validator(id, 'params'), async (req, res) => {
   res.status(OK).json(userEntity.toResponse());
 });
 
-router.route('/').post(async (req, res) => {
+router.post('/', async (req, res) => {
+  const candidate = await usersService.getByLogin(req.body.login);
+
+  if (candidate) {
+    return res
+      .status(BAD_REQUEST)
+      .json({ message: 'This user already exists' });
+  }
   const userEntity = await usersService.save(req.body);
   res.status(OK).json(userEntity.toResponse());
 });

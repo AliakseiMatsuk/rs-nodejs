@@ -14,6 +14,8 @@ require('express-async-errors');
 const winston = require('./common/logging');
 const errorHandler = require('./errors/errorHandler');
 
+const authRouter = require('./resources/auth/auth.router');
+const auth = require('./resources/auth/auth.middleware');
 const userRouter = require('./resources/users/user.router');
 const boardRouter = require('./resources/boards/board.router');
 const taskRouter = require('./resources/tasks/task.router');
@@ -24,7 +26,7 @@ const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
 
 app.use(helmet());
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ extended: true }));
 
 if (process.env.NODE_ENV === 'development') {
   app.use('/doc', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
@@ -47,6 +49,8 @@ app.use(
   )
 );
 
+app.use('/login', authRouter);
+app.use(auth);
 app.use('/users', userRouter);
 app.use('/boards', boardRouter);
 boardRouter.use('/:boardId/tasks', taskRouter);
